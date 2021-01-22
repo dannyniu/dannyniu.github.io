@@ -1,0 +1,25 @@
+body {
+  margin:           1pc calc(25vw - 240px);
+  padding:          1pc;
+  border-radius:    2pc;
+  box-shadow:       1mm 1mm 8mm rgba(64,96,192,75%);
+}
+
+table {
+  border-spacing:   1ex;
+  box-shadow:       1px 1px 2pt rgba(64,128,192,50%);
+
+  padding:          3mm;
+  border-radius:    5mm;
+}
+
+th, td {
+  box-shadow:       1px 1px 2pt rgba(32,64,96,50%);
+
+  padding:          5mm;
+  border-radius:    7mm;
+}
+
+li {
+  margin:           2mm 0mm;
+}

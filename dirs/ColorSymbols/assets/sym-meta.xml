@@ -1,0 +1,93 @@
+<svg
+ xmlns="http://www.w3.org/2000/svg"
+ viewBox="-450 -450 900 900" width="120" height="120">
+
+  <defs>
+    <filter id="Outline-Icon" x="-20" y="-20" width="840" height="840">
+      <feGaussianBlur
+       in="SourceAlpha" result="blur"
+       stdDeviation="8" />
+      <feOffset
+       in="blur" result="blur-offsetted"
+       dx="3" dy="3" />
+      <feBlend in="SourceGraphic" in2="blur-offsetted" mode="normal" />
+    </filter>
+
+    <filter id="Outline-Shape-saved" x="-20" y="-20" width="840" height="840">
+      <feGaussianBlur
+       in="SourceAlpha" result="blur"
+       stdDeviation="24" />
+      <feOffset
+       in="blur" result="blur-offsetted"
+       dx="8" dy="8" />
+      <feBlend in="SourceGraphic" in2="blur-offsetted" mode="normal" />
+    </filter>
+
+    <filter id="Outline-Shape" x="-20" y="-20" width="840" height="840">
+      <feOffset/>
+    </filter>
+
+    <linearGradient id="color" gradientTransform="rotate(90)">
+      <?xpp pp["color"]="red"; ?>
+      <stop stop-color="#FFA080" offset="0%" />
+      <stop stop-color="#E08060" offset="100%" />
+
+      <?xpp pp["color"]="yellow"; ?>
+      <stop stop-color="#FFFF60" offset="0%" />
+      <stop stop-color="#E0E040" offset="100%" />
+
+      <?xpp pp["color"]="green"; ?>
+      <stop stop-color="#C0FFC8" offset="0%" />
+      <stop stop-color="#A0E0A8" offset="100%" />
+
+      <?xpp pp["color"]="blue"; ?>
+      <stop stop-color="#C0E0FF" offset="0%" />
+      <stop stop-color="#A0C0E0" offset="100%" />
+
+      <?xpp pp["color"]=null; ?>
+    </linearGradient>
+  </defs>
+
+  <path
+   class="base" id="icon"
+   d="    M 400,0
+          Q 400,400,0,400
+          Q -400,400,-400,0
+          Q -400,-400,0,-400
+          Q 400,-400,400,0
+          Z"
+   stroke="black" stroke-width="3"
+   fill="url(#color)" filter="url(#Outline-Icon)" />
+
+  <?xpp pp["shape"]="triangle"; ?>
+  <polygon
+   class="shape" id="triangle"
+   points="0,-250 216,125 -216,125"
+   stroke="rgba(0,0,0,0.5)" stroke-width="100"
+   fill="none" filter="url(#Outline-Shape)"
+   transform="translate(0,30)" />
+
+  <?xpp pp["shape"]="cross"; ?>
+  <path
+   class="shape" id="cross"
+   d="    M 200,200 L -200,-200
+          M -200,200 L 200,-200"
+   stroke="rgba(0,0,0,0.5)" stroke-width="100"
+   fill="none" filter="url(#Outline-Shape)" />
+
+  <?xpp pp["shape"]="circle"; ?>
+  <circle
+   class="shape" id="circle"
+   cx="0" cy="0" r="220"
+   stroke="rgba(0,0,0,0.5)" stroke-width="100"
+   fill="none" filter="url(#Outline-Shape)" />
+
+  <?xpp pp["shape"]="box"; ?>
+  <rect
+   class="shape" id="box"
+   x="-200" y="-200" width="400" height="400"
+   stroke="rgba(0,0,0,0.5)" stroke-width="100"
+   fill="none" filter="url(#Outline-Shape)" />
+
+  <?xpp pp["shape"]=null; ?>
+</svg>
