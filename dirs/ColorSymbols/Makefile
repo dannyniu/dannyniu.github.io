@@ -1,5 +1,5 @@
 .PHONY: deploy
 
 deploy:
-	mkdir -p ../../www/games
-	php index.php > ../../www/games/ColorSymbols.html
+	mkdir -p ../../docs/games
+	php index.php > ../../docs/games/ColorSymbols.html
