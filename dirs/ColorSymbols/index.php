@@ -110,7 +110,7 @@
        color:            #E0FFC0; /* not well-supported */
        background-color: #400000;
      }
-     
+
      div.overlay {
        position:         fixed;
        left:             0;
@@ -178,7 +178,7 @@
        right:            1pc;
        bottom:           1pc;
      }
-     
+
      div#StartPage a#DownloadMe {
        font-family:      serif;
        font-size:        calc(10pt + 0.25em);
@@ -251,6 +251,73 @@
      }
     </script>
 
+    <script id="i18n-l10n">
+     var lang_en = {
+       "title":          "Welcome to ColorSymbols",
+       "intro":          "~ Choose difficulty to start ~",
+       "easy":           "Easy",
+       "medium":         "Medium",
+       "difficult":      "Difficult",
+       "downloadme":     "Download This Game",
+       "correct":        "Correct",
+       "wrong":          "Wrong!",
+       "timeout":        "Timeout",
+       "chooseSymbol":   "Choose the Matching *-Symbol-*",
+       "chooseColor":    "Choose the Matching *-Color-*",
+       "lost":           "Game Over, You Lost!",
+       "won":            "!!You Won!!",
+       "ready":          "Are you ready for a game?",
+     };
+
+     var lang_zh = {
+       "title":          "欢迎来到《彩符》",
+       "intro":          "～选择难度～",
+       "easy":           "容易",
+       "medium":         "普通",
+       "difficult":      "较难",
+       "downloadme":     "下载这个游戏",
+       "correct":        "正确",
+       "wrong":          "错误！",
+       "timeout":        "超时",
+       "chooseSymbol":   "选择匹配的*-符号-*",
+       "chooseColor":    "选择匹配的*-颜色-*",
+       "lost":           "游戏结束，败北。",
+       "won":            "!!胜利!!",
+       "ready":          "准备好来一局游戏了吗？",
+     };
+
+     var langs = {
+       "en":        lang_en,
+       "zh":        lang_zh,
+     };
+
+     var lang = langs["en"];
+
+     function lang_autoselect()
+     {
+       var lang_ua = String(navigator.langauge).toLowerCase();
+       var mlen = 0;
+       var mlang = null;
+
+       for( var k in langs )
+       {
+         k = String(k).toLowerCase();
+         var minl = Math.min(k.length, lang_ua.length);
+
+         if( k.substring(0, minl) === lang_ua.substring(0, minl) )
+         {
+           if( mlen >= minl )
+             continue;
+         }
+
+         mlen = minl;
+         mlang = k;
+       }
+
+       lang = langs[mlang];
+     }
+    </script>
+
     <script id="game-settings">
      var setting_current = null;
      var settings = {};
@@ -297,6 +364,11 @@
      window.onload = function()
      {
        //
+       // language auto-select.
+
+       try { lang_autoselect(); } catch(e) {};
+       
+       //
        // initialize variables for holding elements.
 
        ielem_startpage = document.getElementById("StartPage");
@@ -319,10 +391,20 @@
        ielem_hp_bar = document.getElementById("HealthPoints");
 
        //
-       // setup download link.
+       // setup download link as well as other static UI localizations.
 
-       document.getElementById("DownloadMe").
-                href = document.location.href;
+       var elem;
+       elem = document.getElementById("DownloadMe");
+       elem.href = document.location.href;
+       elem.textContent = lang["downloadme"];
+
+       document.getElementById("Title").textContent = lang["title"];
+       document.getElementById("Intro").textContent = lang["intro"];
+
+       elem = document.querySelectorAll("div#StartPage a.ui-flat");
+       for(var i=0; i<elem.length; i++)
+         elem[i].textContent = lang[elem[i].textContent];
+       console.log(elem);
 
        //
        // start opening animation.
@@ -365,7 +447,7 @@
        var aclr = dice24();
 
        ielem_challenge.src = image_sym(colors[cclr], shapes[csym]);
-       ielem_question.textContent = "Are you ready for a game?";
+       ielem_question.textContent = lang["ready"];
 
        var vsym = permute4(asym);
        var vclr = permute4(aclr);
@@ -386,7 +468,7 @@
        var aclr = dice24();
 
        ielem_challenge.src = image_sym(colors[cclr], shapes[csym]);
-       ielem_question.textContent = "Choose the Matching " + questions[mode];
+       ielem_question.textContent = lang["choose" + questions[mode]];
 
        var vsym = permute4(asym);
        var vclr = permute4(aclr);
@@ -407,6 +489,7 @@
 
      function AddScore(a)
      {
+       // a is one of "correct", "wrong", and "timeout".
        return function()
        {
          score.hp += score[a];
@@ -417,7 +500,7 @@
 
 
          var span = document.createElement("span");
-         span.textContent = a;
+         span.textContent = lang[a];
          span.className = "score-float";
          ielem_answer_result.appendChild(span);
          setTimeout(
@@ -441,14 +524,14 @@
      function GameOver()
      {
        ielem_startpage.hidden = false;
-       ielem_gameresult.textContent = "Game Over, You Lost!"
+       ielem_gameresult.textContent = lang["lost"];
        timer_sparkle = setInterval(sparkle, 500);
      }
 
      function GameWon()
      {
        ielem_startpage.hidden = false;
-       ielem_gameresult.textContent = "!!You Won!!"
+       ielem_gameresult.textContent = lang["won"];
        timer_sparkle = setInterval(sparkle, 500);
      }
     </script>
@@ -488,10 +571,10 @@
         </div>
         <div id="GameResult" class="Title"></div>
 
-        <div>~ Choose difficulty to start ~</div>
-        <a class="ui-flat" onclick="StartGame('easy');">Easy</a>
-        <a class="ui-flat" onclick="StartGame('medium');">Medium</a>
-        <a class="ui-flat" onclick="StartGame('difficult');">Difficult</a>
+        <div id="Intro">~ Choose difficulty to start ~</div>
+        <a class="ui-flat" onclick="StartGame('easy');">easy</a>
+        <a class="ui-flat" onclick="StartGame('medium');">medium</a>
+        <a class="ui-flat" onclick="StartGame('difficult');">difficult</a>
 
         <div class="corner-lower-right">
           <a id="DownloadMe" download>Download This Game</a>
