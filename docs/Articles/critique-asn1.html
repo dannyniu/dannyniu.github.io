@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="color-scheme" content="light dark"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>A few thoughts after reading "ASN.1 Complete"</title>
+    <style> li { margin: 1ex; } </style>
+  </head>
+  <body>
+
+    <h1>A few thoughts after reading "ASN.1 Complete"</h1>
+
+    <p>Author: DannyNiu/NJF, 2021-02-12</p>
+
+    <p>
+      The first time I encountered ASN.1 was when I graduated from internship
+      and became formally employed. I needed to study SSL/TLS and to manage the
+      website certificate. I looked up specification for X.509 certificates,
+      but I couldn't understand how they're encoded, because the semantics are
+      specified in abstract syntax notation, with encoding rules only mentioned
+      in reference citations.
+    </p>
+
+    <p>
+      As a professional hobby, I read various cryptography standards, and
+      what confused me for a long time was the esoteric notations used in
+      PKCS#1 and SEC#1 ASN.1 module specifications. I spent some time reading
+      "ASN.1 Complete" by Prof. John Larmouth, and it helped me understood
+      what those hash-sign standards were talking about.
+    </p>
+
+    <p>
+      The book is a lengthy read. If I were to describe how I feel when I
+      read it - if The C Programming Language was writing an HTML page,
+      then ASN.1 Complete would be editing the internal XML content of an
+      ODT or a DOCX file with <code>ed</code>. The book "ASN.1 Complete", and
+      ASN.1, will be the topic of this article.
+    </p>
+
+    <p>
+      In essence, ASN.1 is just a schema language for defining data structures
+      intended for exchange between computing systems. It was originally
+      specified in union with BER in X.409 (which is now out of stock), and so
+      ASN.1 can be seen as a textual representation of BER, in the same vein
+      that assembly language is the textual representation of machine code.
+    </p>
+
+    <p>
+      While reading the book, you see some of the recurring themes which feel
+      like being advertised to you as the selling point of ASN.1 - they were
+      relevant back then, but not now as our understanding of
+      IT engineering progresses. I would advise readers of that book to be
+      vigilant about some IT engineering practices that the book describes -
+      those ideas aren't false, but in general, an engineering would not
+      solve it using ASN.1 alone.
+    </p>
+
+    <h2>Problems that the book claimed/implied ASN.1 solves</h2>
+
+    <ol>
+      <li>
+        ASN.1 seperates encoding/decoding from
+        application implementation and its documentation.
+        <ul>
+          <li>
+            Each application might have specific needs that a
+            generic notation or codec cannot accommondate.
+            And this is evidented by the several reworking of
+            how "holes" (parts filled by higher-layer protocols)
+            are defined.
+          </li>
+        </ul>
+      </li>
+
+      <li>
+        ASN.1 provides provision for paving way for a "version 2" protocol
+        in the "version 1" specification.
+        <ul>
+          <li>
+            Compatibility between implementations of different versions
+            of a protocol is more complicated than just a data-level ASN.1
+            specification, and cannot be solved by ASN.1 alone. While ASN.1
+            provides provisions for cross-version compatibility, the
+            book made the wrong impression that we can solve it with
+            ASN.1 alone.
+          </li>
+          <li>
+            Most application can just negotiate protocol versions.
+          </li>
+        </ul>
+      </li>
+
+      <li>
+        Leaving room in the base system for higher-layer and/or
+        companion protocols to fill in.
+        <ul>
+          <li>
+            Practically all protocols are capable of that. But ASN.1
+            is trying too hard to make the base system aware of those
+            higher-layer and companion protocols' semantics.
+          </li>
+        </ul>
+      </li>
+    </ol>
+
+    <h2>Modern Engineering Wisdom</h2>
+
+    <p>
+      A modern protocol specification would specify more than just
+      message formats. A modern specification must be useful for
+      guiding use and implementation, and should be able to serve as
+      basis for arguring correctness and security.
+    </p>
+
+    <p>
+      As such, in addition to message formats, a modern protocol specification
+      would/might specify:
+    </p>
+
+    <ol>
+      <li>
+        Parsing and serialization rules and all associated error handling.
+        Usually in the form of pseudo-codes or bullet-point list of steps.
+        <ul>
+          <li>
+            ASN.1 solves this problem, but in a one-size-fit-all approach.
+          </li>
+        </ul>
+      </li>
+
+      <li>
+        Actions to be taken upon the success or failure to receive or send
+        messages; as well as how such events are reported to the invoker
+        of the protocol instance.
+        <ul>
+          <li>
+            This is completely outside the scope of ASN.1, but an integral
+            component of a formal specification.
+          </li>
+        </ul>
+      </li>
+
+      <li>
+        Design rationales, implementation guide and/or recommendations
+        (which are especially important when they'd be available as
+        first-hand information), provisions for extensions, etc.
+        <ul>
+          <li>
+            The point here, is to remind everyone that protocol design
+            is absolutely much more than just specifying message formats.
+            ASN.1 teaches the notation (and its encodings), but in no way
+            how to desgin protocols. 
+          </li>
+        </ul>
+      </li>
+    </ol>
+    
+  </body>
+</html>
