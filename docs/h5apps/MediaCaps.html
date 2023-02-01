@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Browser Media Capability Prober</title>
+
+    <script id="Defs-H264">
+     var H264_CodecParams_PPCC = [
+       // P: Profile (as suffix),
+       //    Progressive (as prefix),
+       //    Predictive (as modifier),
+       // C: Constrained
+       // B: Baseline,
+       // X: Extended,
+       // M: Main,
+       // Hi: High,
+       // 10: 10-bit per channel,
+       // 422: 4:2:2 chroma sub-sampling,
+       // 444: full chroma sampling,
+       // I: Intra,
+       // Cavlc: context-adaptive huffman coding,
+       // S: Scalable,
+       // St: Stereo,
+       // Mv: Multiview,
+       // D: Depth (Z-axis),
+       { "v": "4240", "d": "CBP" },
+       { "v": "4200", "d": "BP" },
+       { "v": "5800", "d": "XP" },
+       { "v": "4D00", "d": "MP" },
+       { "v": "6400", "d": "HiP" },
+       { "v": "6408", "d": "PHiP" },
+       { "v": "640C", "d": "CPHiP" },
+       { "v": "6E00", "d": "Hi10P" },
+       { "v": "7A00", "d": "Hi422P" },
+       { "v": "F400", "d": "Hi444PP" },
+       { "v": "6E10", "d": "Hi10IP" },
+       { "v": "7A10", "d": "Hi422IP" },
+       { "v": "F410", "d": "Hi444IP" },
+       { "v": "4400", "d": "Cavlc444IP" },
+       { "v": "5300", "d": "SBP" },
+       { "v": "5304", "d": "SCBP" },
+       { "v": "5600", "d": "SHiP" },
+       { "v": "5604", "d": "SCHiP" },
+       { "v": "5620", "d": "SHiIP" },
+       { "v": "8000", "d": "StHP" },
+       { "v": "7600", "d": "MvHiP" },
+       { "v": "8A00", "d": "MvDHiP" } ];
+
+     var H264_CodecParams_Level = [
+       { "v": '28', "d": "4.0" },
+       { "v": '29', "d": "4.1" },
+       { "v": '2A', "d": "4.2" } ];
+
+     var VResolusions = [
+       { "w": 1280, "h": 720 },
+       { "w": 1920, "h": 1080 },
+       { "w": 3840, "h": 2160 } ];
+
+     var VFrameRates = [
+       23.97,
+       24.0,
+       25.0,
+       29.97,
+       30.0,
+       50.0,
+       59.94,
+       60.0 ];
+
+     var VBitRates = [
+       // unit: Mbps,
+       // p: progressive,
+       // i: interlaced,
+       // hi-fps: 50/60 fps (instead of 24/25/30)
+       // slo-mo: 100/120 fps
+       Math.pow(2, 0/2) * 10, // ~10Mbps; H264: 720p, 1080i
+       Math.pow(2, 1/2) * 10, // ~14Mbps; H264: 720p hi-fps, 1080p
+       Math.pow(2, 2/2) * 10, // ~20Mbps; H264: 1080p hi-fps
+       Math.pow(2, 3/2) * 10, // ~28Mbps; H264: 2160p, 1080p slo-mo
+       Math.pow(2, 4/2) * 10, // ~40Mbps; H264: 2160p hi-fps
+       Math.pow(2, 5/2) * 10 ]; // ~57Mbps; H264: 2160p slo-mo
+    </script>
+
+    <script id="MainScript">
+     async function CapProbe_H264()
+     {
+       let tbody = document.getElementById("H264-Specs-Tab");
+
+       for( let p of H264_CodecParams_PPCC )
+       {
+         for( let l of H264_CodecParams_Level )
+         {
+           for( let sz of VResolusions )
+           {
+             for( let fps of VFrameRates )
+             {
+               for( let r of VBitRates )
+               {
+                 let codec = "avc1."+p.v+l.v;
+                 let cap = await navigator.mediaCapabilities.decodingInfo(
+                   { 'type': "file",
+                     'video': {
+                       'contentType': 'video/mp4; codecs="' + codec + '"',
+                       'width': sz.w, 'height': sz.h,
+                       'bitrate': r * 1000 * 1000,
+                       'framerate': fps } } );
+
+                 let tr = document.createElement("tr");
+                 let tc;
+
+                 (tc = document.createElement("td")).textContent =
+                   String(cap.supported); tr.appendChild(tc);
+
+                 (tc = document.createElement("td")).textContent =
+                   String(p.d); tr.appendChild(tc);
+
+                 (tc = document.createElement("td")).textContent =
+                   String(l.d); tr.appendChild(tc);
+
+                 (tc = document.createElement("td")).textContent =
+                   String(sz.w)+" x "+String(sz.h); tr.appendChild(tc);
+
+                 (tc = document.createElement("td")).textContent =
+                   String(fps); tr.appendChild(tc);
+
+                 (tc = document.createElement("td")).textContent =
+                   String(Math.round(r))+" Mbps";
+                 tr.appendChild(tc);
+
+                 tbody.appendChild(tr);
+               }
+             }
+           }
+         }
+       }
+     }
+
+     window.onload = async function()
+     {
+       CapProbe_H264();
+     }
+    </script>
+
+    <style>
+     ::root {
+       color: #000;
+     }
+
+     table.SpecsTab {
+       border-collapse: separate;
+     }
+
+     table.SpecsTab th,
+     table.SpecsTab td {
+       border-width: 1mm;
+       padding: 1mm;
+     }
+
+     table.SpecsTab th {
+       background: #0FF;
+     }
+
+     table.SpecsTab td {
+       background: #DDD;
+     }
+    </style>
+  </head>
+  <body>
+
+    <table class="SpecsTab" id="H264-Specs">
+      <thead>
+        <th>Support</th>
+        <th>Profile</th>
+        <th>Level</th>
+        <th>Resolusion</th>
+        <th>Frame Rate</th>
+        <th>Bit Rate</th>
+      </thead>
+      <tbody id="H264-Specs-Tab">
+      </tbody>
+  </body>
+</html>
