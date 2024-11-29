@@ -5,6 +5,17 @@ body {
   box-shadow:       1mm 1mm 8mm rgba(64,96,192,75%);
 }
 
+div#logo-avatar {
+  text-align:       center;
+}
+
+div#logo-avatar img {
+  width:            224px;
+  height:           224px;
+  border-radius:    16px;
+  box-shadow:       1pt 2px 3mm rgba(0,0,0,0.5);
+}
+
 table {
   border-spacing:   1ex;
   box-shadow:       1px 1px 2pt rgba(64,128,192,50%);
